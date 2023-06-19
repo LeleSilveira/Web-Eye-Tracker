@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <title>Face Tracking em tempo Real</title>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.4.0/dist/tf.min.js"></script>  -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.6.0/dist/tf.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection@0.0.1/dist/face-landmarks-detection.js"></script>
+    <script src="https://unpkg.com/mathjs@9.3.0/lib/browser/math.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="style.css" /> 
+        
+  </head>
+  <body>
+
+    <div style="width=640px; height=400px;position:absolute;">
+      <canvas id="output"></canvas> 
+    </div>
+    
+    <div id="heatmapContainerWrapper" >
+      <div id="heatmapContainer" ></div>
+    </div>
+    
+     <div style="position:relative; ">
+      <button id = "botao" >!</button>
+      <button id = "botao2" >!</button>
+      <button id = "botao3" >!</button>
+      <canvas
+        id="fundo"
+        style="width:100%; height:100%;"
+      ></canvas>
+    <video
+      id="webcam"
+      playsinline
+      style="
+            visibility: hidden;
+            width: 0%;
+            height: 0%;
+            "
+    ></video>
+    </div>
+    <video id="transmissao" playsinline autoplay muted></video>
+
+    
+    <script src="./OlhoScript.js" type="module"></script>
+    <script src="./OlhoGeometry.util.js" type="module"></script> 
+  </body>
+</html>
