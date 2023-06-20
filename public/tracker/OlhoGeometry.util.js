@@ -1,9 +1,9 @@
 const math = window.math;
 
 // Converts from degrees to radians.
-Math.radians = degrees => (degrees * Math.PI) / 180;
+Math.radians = (degrees) => (degrees * Math.PI) / 180;
 // Converts from radians to degrees.
-Math.degrees = radians => (radians * 180) / Math.PI;
+Math.degrees = (radians) => (radians * 180) / Math.PI;
 
 export default class OlhoGeometryUtil {
   /**
@@ -47,7 +47,7 @@ export default class OlhoGeometryUtil {
    * @returns {number[3], number[[3]]}
    */
 
-  static computeHeadPoseEstimation(face, origem, difx, dify,divx,divy) {
+  static computeHeadPoseEstimation(face, origem, difx, dify, divx, divy) {
     const { annotations, scaledMesh } = face;
     const { leftCheek, rightCheek } = annotations;
     // grab the landmark points
@@ -72,21 +72,21 @@ export default class OlhoGeometryUtil {
     let d = math.squeeze(math.row(centered, 152)).toArray(); //queixo;
     let palpebraDir = math.squeeze(math.row(centered, 159)).toArray(); // palpebra 159
     let palpebraEsq = math.squeeze(math.row(centered, 386)).toArray(); // palpebra 386
-    let palpebra=[];
-    palpebra[0] = (palpebraDir[0]+palpebraEsq[0])/2;
-    palpebra[1] = (palpebraDir[1]+palpebraEsq[1])/2;
+    let palpebra = [];
+    palpebra[0] = (palpebraDir[0] + palpebraEsq[0]) / 2;
+    palpebra[1] = (palpebraDir[1] + palpebraEsq[1]) / 2;
     let eye1 = math.squeeze(math.row(centered, 473)).toArray(); // pupila olho direito 473
     let eye2 = math.squeeze(math.row(centered, 468)).toArray(); // pupila olho esquerdo 468
     let mediaOlhos = [
       (eye1[0] + eye2[0]) / 2,
       (eye1[1] + eye2[1]) / 2,
-      (eye1[2] + eye2[2]) / 2
+      (eye1[2] + eye2[2]) / 2,
     ];
 
     let canvas = document.getElementById("output");
     let output = canvas.getContext("2d");
     //desenha vetores que orientam eixos x e y
-   // drawArrow([b[1], b[0]], [a[1], a[0]], output, 3);
+    // drawArrow([b[1], b[0]], [a[1], a[0]], output, 3);
     //drawArrow([d[1], d[0]], [c[1], c[0]], output, 3);
 
     //variaveis de escala
@@ -97,7 +97,7 @@ export default class OlhoGeometryUtil {
 
     let p1 = math.squeeze(math.row(centered, 130)).toArray(); //esq
     let p2 = math.squeeze(math.row(centered, 359)).toArray(); //dir
-    let p3 = [(p1[0] + p2[0]) / divx , p1[1], p1[2]]; //ponto esperado no eixo x
+    let p3 = [(p1[0] + p2[0]) / divx, p1[1], p1[2]]; //ponto esperado no eixo x
     p3[0] = p3[0] - difx; //fator de correção - calibração
     let distH = p3[0] - mediaOlhos[0]; //positivo olha pra direita, negativo olha pra esquerda
     if (distH > 0) {
@@ -113,21 +113,21 @@ export default class OlhoGeometryUtil {
 
     let pd1 = math.squeeze(math.row(centered, 52)).toArray(); //cima dir
     let pd2 = math.squeeze(math.row(centered, 230)).toArray(); //baixo dir
-    let pe1= math.squeeze(math.row(centered, 282)).toArray(); //cima esq
+    let pe1 = math.squeeze(math.row(centered, 282)).toArray(); //cima esq
     let pe2 = math.squeeze(math.row(centered, 450)).toArray(); //baixo esq
-    let p4=[];
-    p4[0]=(pd1[0]+pe1[0])/2
-    p4[1]=(pd1[1]+pe1[1])/2
-    let p5=[];
-    p5[0]=(pd2[0] + pe2[0])/2
-    p5[1]=(pd2[1] + pe2[1])/2
-    let p6 = [p4[0], (p4[1] + p5[1]) / divy , p4[2]]; // ponto esperado no eixo y
+    let p4 = [];
+    p4[0] = (pd1[0] + pe1[0]) / 2;
+    p4[1] = (pd1[1] + pe1[1]) / 2;
+    let p5 = [];
+    p5[0] = (pd2[0] + pe2[0]) / 2;
+    p5[1] = (pd2[1] + pe2[1]) / 2;
+    let p6 = [p4[0], (p4[1] + p5[1]) / divy, p4[2]]; // ponto esperado no eixo y
     let p7 = math.squeeze(math.row(centered, 473)).toArray(); // pupila olho direito
     let p8 = math.squeeze(math.row(centered, 468)).toArray(); // pupila olho esquerdo
     p6[1] = p6[1] - dify; //fator de correção - calibração
     var aux = p7[2] + p8[2];
     if (aux > 6.0) {
-      aux = 6.0;        //"Filtra" mudanças muito bruscas
+      aux = 6.0; //"Filtra" mudanças muito bruscas
     }
     if (aux < -6.0) {
       aux = -6.0;
@@ -139,15 +139,15 @@ export default class OlhoGeometryUtil {
       c = [c[0], c[1], c[2] + mv * distV * 1.3]; //z aumenta quando se afasta da tela, e diminui quando nos aproximamos
       d = [d[0], d[1], d[2] - mv * distV * 1.3];
     } else if (distV < 0) {
-      c = [c[0], c[1], c[2] - Math.abs(mv * distV*1.4)]; //z aumenta quando se afasta da tela, e diminui quando nos aproximamos
-      d = [d[0], d[1], d[2] + Math.abs(mv * distV*1.4)];
+      c = [c[0], c[1], c[2] - Math.abs(mv * distV * 1.4)]; //z aumenta quando se afasta da tela, e diminui quando nos aproximamos
+      d = [d[0], d[1], d[2] + Math.abs(mv * distV * 1.4)];
     }
     let pty = p6;
     // console.log(aux.toFixed(2));
 
     //desenha alguns pontos no canvas para acompanharmos
     //vertical
-   /* output.fillStyle = "#32EEDB";
+    /* output.fillStyle = "#32EEDB";
     output.beginPath()
     output.arc(palpebra[0], palpebra[1], 3, 0, 2 * Math.PI); //ponto central da pupila estimado
     output.fill();
@@ -162,7 +162,7 @@ export default class OlhoGeometryUtil {
     output.arc(p5[0], p5[1], 3, 0, 2 * Math.PI); //3 eh o raio
     output.fill();*/
     //horizontal
-  /*output.fillStyle = "#32EEDB";
+    /*output.fillStyle = "#32EEDB";
     output.beginPath();
     output.arc(p3[0], p3[1], 3, 0, 2 * Math.PI); //ponto central da pupila estimado
     output.fill();
@@ -192,7 +192,7 @@ export default class OlhoGeometryUtil {
     let rotationMatrix = math.matrix([rx, ry, rz]); //math.matrix([rx, ry, rz]);
     return { origin, rotationMatrix, ptx, pty };
   }
-  
+
   //--------------------------------------------------------------------------------------------------
 
   /**
@@ -253,35 +253,7 @@ math.import({
       }
     }
     return _X;
-  }
+  },
 });
 
-function distanciaEntrePontos(ponto1, ponto2) {
-  return Math.sqrt(
-    Math.pow(ponto1.x - ponto2.x, 2) + Math.pow(ponto1.y - ponto2.y, 2)
-  );
-}
-
 //--------------------------------------------------------------------------------------------------
-
-function drawArrow([ay, ax], [by, bx], ctx, lineWidth = 2) {
-  var headlen = 10; // length of head in pixels
-  var dx = bx - ax;
-  var dy = by - ay;
-  var angle = Math.atan2(dy, dx);
-  ctx.beginPath();
-  ctx.moveTo(ax, ay);
-  ctx.lineTo(bx, by);
-  ctx.lineTo(
-    bx - headlen * Math.cos(angle - Math.PI / 6),
-    by - headlen * Math.sin(angle - Math.PI / 6)
-  );
-  ctx.moveTo(bx, by);
-  ctx.lineTo(
-    bx - headlen * Math.cos(angle + Math.PI / 6),
-    by - headlen * Math.sin(angle + Math.PI / 6)
-  );
-  ctx.lineWidth = lineWidth;
-  ctx.strokeStyle = "pink";
-  ctx.stroke();
-}
